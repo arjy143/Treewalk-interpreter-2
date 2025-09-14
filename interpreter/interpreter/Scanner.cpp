@@ -1,4 +1,5 @@
 #include "Scanner.h"
+#include "Lox.h"
 
 const std::unordered_map<std::string, TokenType> Scanner::keywords = {
 	{"and", TokenType::AND}, {"class", TokenType::CLASS}, {"else", TokenType::ELSE},
@@ -114,7 +115,9 @@ void Scanner::ScanToken()
 		else if (IsAlpha(c))
 			Identifier();
 		else
-			; //Lox::Error(line, "Unexpected character.");
+		{
+			Lox::Error(line, "Unexpected character.");
+		}
 		break;
 	}
 }
