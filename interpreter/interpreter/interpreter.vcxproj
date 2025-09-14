@@ -128,12 +128,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AstPrinter.cpp" />
     <ClCompile Include="Lox.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="Scanner.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AstPrinter.h" />
     <ClInclude Include="Expr.h" />
     <ClInclude Include="Lox.h" />
     <ClInclude Include="Parser.h" />

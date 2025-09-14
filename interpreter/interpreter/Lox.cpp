@@ -2,6 +2,8 @@
 #include "Scanner.h"
 #include <iostream>
 #include <fstream>
+#include "Parser.h"
+#include "AstPrinter.h"
 
 bool Lox::hadError = false;
 
@@ -42,12 +44,20 @@ void Lox::Run(const std::string & source)
 {
 	Scanner scanner(source);
 	auto tokens = scanner.ScanTokens();
+	Parser parser(tokens);
+	auto expression = parser.Parse();
 
-	for (auto& token : tokens)
-	{
-		std::cout << token.lexeme << " ";
+	if (hadError) return;
+
+	AstPrinter printer;
+	for (const auto& stmt : expression) {
+		if (auto printStmt = dynamic_cast<PrintStmt*>(stmt.get())) {
+			std::cout << printer.Print(*printStmt->expression) << std::endl;
+		}
+		else if (auto exprStmt = dynamic_cast<ExpressionStmt*>(stmt.get())) {
+			std::cout << printer.Print(*exprStmt->expression) << std::endl;
+		}
 	}
-	std::cout << "\n";
 }
 
 void Lox::Error(int line, std::string message)
@@ -58,4 +68,5 @@ void Lox::Error(int line, std::string message)
 void Lox::Report(int line, std::string where, std::string message)
 {
 	std::cerr << "[line " << line << "] Error " << where << ": " << message << "\n";
+	hadError = true;
 }
