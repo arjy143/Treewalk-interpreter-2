@@ -1,4 +1,5 @@
 #include "Lox.h"
+#include "Scanner.h"
 #include <iostream>
 #include <fstream>
 
@@ -39,7 +40,14 @@ void Lox::RunPrompt()
 }
 void Lox::Run(const std::string & source)
 {
-	std::cout << source << "\n";
+	Scanner scanner(source);
+	auto tokens = scanner.ScanTokens();
+
+	for (auto& token : tokens)
+	{
+		std::cout << token.lexeme << " ";
+	}
+	std::cout << "\n";
 }
 
 void Lox::Error(int line, std::string message)
