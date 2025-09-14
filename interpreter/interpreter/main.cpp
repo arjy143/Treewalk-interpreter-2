@@ -12,7 +12,6 @@ int main(int argc, char* argv[])
     }
     else if (argc == 2)
     {
-        std::cout << "Optional argument provided: " << argv[1] << "\n";
         lox.RunFile(argv[1]);
     }
     else
