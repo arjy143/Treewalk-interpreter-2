@@ -1,0 +1,23 @@
+#include <iostream>
+#include "Lox.h"
+
+int main(int argc, char* argv[])
+{
+    Lox lox;
+
+    if (argc > 2)
+    {
+		std::cerr << "Usage: " << argv[0] << " [optional_argument]\n";
+		return 1;
+    }
+    else if (argc == 2)
+    {
+        std::cout << "Optional argument provided: " << argv[1] << "\n";
+        lox.RunFile(argv[1]);
+    }
+    else
+    {
+        lox.RunPrompt();
+    }
+    std::cout << "Hello World!\n";
+}
