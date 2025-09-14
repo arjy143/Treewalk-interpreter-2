@@ -18,5 +18,4 @@ int main(int argc, char* argv[])
     {
         lox.RunPrompt();
     }
-    std::cout << "Hello World!\n";
 }
