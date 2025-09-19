@@ -129,6 +129,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AstPrinter.cpp" />
+    <ClCompile Include="Interpreter.cpp" />
     <ClCompile Include="Lox.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Parser.cpp" />
@@ -137,6 +138,7 @@
   <ItemGroup>
     <ClInclude Include="AstPrinter.h" />
     <ClInclude Include="Expr.h" />
+    <ClInclude Include="Interpreter.h" />
     <ClInclude Include="Lox.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Scanner.h" />
