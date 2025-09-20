@@ -1,6 +1,7 @@
 #include "Interpreter.h"
 #include <stdexcept>
 #include <iostream>
+#include "RuntimeError.h"
 
 void Interpreter::Interpret(const std::vector<std::unique_ptr<Stmt>>& statements)
 {
@@ -11,9 +12,9 @@ void Interpreter::Interpret(const std::vector<std::unique_ptr<Stmt>>& statements
 			Execute(*statement);
 		}
 	}
-	catch (const std::runtime_error& error)
+	catch (const RuntimeError& error)
 	{
-		std::cerr <<"runtime error" << error.what() << "\n";
+		Lox::TrackRuntimeError(error);
 	}
 }
 
@@ -36,7 +37,7 @@ void Interpreter::VisitBinaryExpr(BinaryExpr& expr)
 		}
 		else
 		{
-			throw std::runtime_error("Operands must be two numbers or two strings.");
+			throw RuntimeError(expr.op, "Operands must be two numbers or two strings.");
 		}
 		break;
 	case TokenType::MINUS:
@@ -46,7 +47,7 @@ void Interpreter::VisitBinaryExpr(BinaryExpr& expr)
 		}
 		else
 		{
-			throw std::runtime_error("Operands must be numbers.");
+			throw RuntimeError(expr.op, "Operands must be numbers.");
 		}
 		break;
 	case TokenType::STAR:
@@ -56,7 +57,7 @@ void Interpreter::VisitBinaryExpr(BinaryExpr& expr)
 		}
 		else
 		{
-			throw std::runtime_error("Operands must be numbers.");
+			throw RuntimeError(expr.op, "Operands must be numbers.");
 		}
 		break;
 	case TokenType::SLASH:
@@ -64,13 +65,13 @@ void Interpreter::VisitBinaryExpr(BinaryExpr& expr)
 		{
 			if (std::get<double>(right) == 0)
 			{
-				throw std::runtime_error("Division by zero.");
+				throw RuntimeError(expr.op, "Division by zero.");
 			}
 			lastValue = std::get<double>(left) / std::get<double>(right);
 		}
 		else
 		{
-			throw std::runtime_error("Operands must be numbers.");
+			throw RuntimeError(expr.op, "Operands must be numbers.");
 		}
 		break;
 	case TokenType::GREATER:
@@ -120,7 +121,7 @@ void Interpreter::VisitBinaryExpr(BinaryExpr& expr)
 		lastValue = IsEqual(left, right);
 		break;
 	default:
-		throw std::runtime_error("Unknown binary operator.");
+		throw RuntimeError(expr.op, "Unknown binary operator.");
 	}
 
 }
@@ -148,7 +149,7 @@ void Interpreter::VisitUnaryExpr(UnaryExpr& expr)
 		}
 		else
 		{
-			throw std::runtime_error("Operand must be a number.");
+			throw RuntimeError(expr.op, "Operand must be a number.");
 		}
 		break;
 	case TokenType::BANG:

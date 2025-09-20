@@ -7,6 +7,7 @@
 #include "Interpreter.h"
 
 bool Lox::hadError = false;
+bool Lox::hadRuntimeError = false;
 
 void Lox::RunFile(const std::string& path)
 {
@@ -28,6 +29,10 @@ void Lox::RunFile(const std::string& path)
 	{
 		Lox::Error(0, "some error");
 	}
+	if (Lox::hadRuntimeError)
+	{
+		Lox::Error(0, "some runtime error");
+	}
 }
 void Lox::RunPrompt()
 {
@@ -39,11 +44,13 @@ void Lox::RunPrompt()
 			break;
 		Lox::Run(line);
 		Lox::hadError = false;
+		Lox::hadRuntimeError = false;
 	}
 }
 void Lox::Run(const std::string & source)
 {
 	hadError = false;
+	hadRuntimeError = false;
 	Scanner scanner(source);
 	auto tokens = scanner.ScanTokens();
 	Parser parser(tokens);
@@ -53,20 +60,21 @@ void Lox::Run(const std::string & source)
 
 	Interpreter interpreter;
 	interpreter.Interpret(expression);
-	/*for (const auto& stmt : expression) {
-		if (auto printStmt = dynamic_cast<PrintStmt*>(stmt.get())) {
-			interpreter.Interpret(*printStmt->expression);
-		}
-		else if (auto exprStmt = dynamic_cast<ExpressionStmt*>(stmt.get())) {
-			interpreter.Interpret(*exprStmt->expression);
-		}
-	}*/
+
 }
 
 void Lox::Error(int line, std::string message)
 {
 	Lox::Report(line, "", message);
 }
+
+void Lox::TrackRuntimeError(const RuntimeError& message)
+{
+	std::cerr << "[line " << message.getToken().line << "] RuntimeError: "
+		<< message.what() << "\n";
+	hadRuntimeError = true;
+}
+
 
 void Lox::Report(int line, std::string where, std::string message)
 {
