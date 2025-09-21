@@ -29,6 +29,8 @@ private:
 	std::unique_ptr<Stmt> Declaration();
 	std::unique_ptr<Stmt> VarDeclaration();
 	std::unique_ptr<Stmt> BlockStatement();
+	std::unique_ptr<Stmt> IfStatement();
+	std::unique_ptr<Stmt> WhileStatement();
 
 	std::unique_ptr<Expr> Expression();
 	std::unique_ptr<Expr> Equality();

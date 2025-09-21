@@ -26,6 +26,8 @@ public:
 	void VisitPrintStmt(PrintStmt& stmt) override;
 	void VisitVarStmt(VarStmt& stmt) override;
 	void VisitBlockStmt(BlockStmt& stmt) override;
+	void VisitIfStmt(IfStmt& stmt) override;
+	void VisitWhileStmt(WhileStmt& stmt) override;
 
 
 private:

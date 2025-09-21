@@ -197,13 +197,14 @@ void Interpreter::VisitBlockStmt(BlockStmt& stmt)
 {
 	//create a new environment for the block
 	auto previous = environment;
-	environment = std::make_shared<Environment>();
+	environment = std::make_shared<Environment>(previous);
 	try
 	{
 		for (const auto& statement : stmt.statements)
 		{
 			if (!statement) continue; //skip null statements
-			Execute(*statement);
+			//Execute(*statement);
+			statement->Accept(*this);
 		}
 	}
 	catch (...)//handle exceptions of any type, but could change this
@@ -212,6 +213,27 @@ void Interpreter::VisitBlockStmt(BlockStmt& stmt)
 		throw;
 	}
 	environment = previous;
+}
+
+void Interpreter::VisitIfStmt(IfStmt& stmt)
+{
+	auto condition = Evaluate(*stmt.condition);
+	if (IsTruthy(condition))
+	{
+		Execute(*stmt.thenBranch);
+	}
+	else if (stmt.elseBranch)
+	{
+		Execute(*stmt.elseBranch);
+	}
+}
+
+void Interpreter::VisitWhileStmt(WhileStmt& stmt)
+{
+	while (IsTruthy(Evaluate(*stmt.condition)))
+	{
+		Execute(*stmt.body);
+	}
 }
 
 //some helper methods

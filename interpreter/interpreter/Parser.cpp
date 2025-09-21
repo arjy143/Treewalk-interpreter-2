@@ -31,6 +31,9 @@ std::unique_ptr<Stmt> Parser::Statement()
 	try
 	{
 		//if (Match({ TokenType::VAR })) return VarDeclaration();
+
+		if (Match({ TokenType::IF })) return IfStatement();
+		if (Match({ TokenType::WHILE })) return WhileStatement();
 		if (Match({ TokenType::PRINT })) return PrintStatement();
 		if (Match({ TokenType::LEFT_BRACE })) return BlockStatement();
 		return ExpressionStatement();
@@ -79,6 +82,28 @@ std::unique_ptr<Stmt> Parser::BlockStatement()
 
 	Consume(TokenType::RIGHT_BRACE, "Expect '}' after block.");
 	return std::make_unique<BlockStmt>(std::move(statements));
+}
+
+std::unique_ptr<Stmt> Parser::IfStatement()
+{
+	Consume(TokenType::LEFT_PAREN, "Expect '(' after 'if'.");
+	auto condition = Expression();
+	Consume(TokenType::RIGHT_PAREN, "Expect ')' after if condition.");
+	auto thenBranch = Statement();
+	std::unique_ptr<Stmt> elseBranch = nullptr;
+	if (Match({ TokenType::ELSE })) {
+		elseBranch = Statement();
+	}
+	return std::make_unique<IfStmt>(std::move(condition), std::move(thenBranch), std::move(elseBranch));
+}
+
+std::unique_ptr<Stmt> Parser::WhileStatement()
+{
+	Consume(TokenType::LEFT_PAREN, "Expect '(' after 'while'.");
+	auto condition = Expression();
+	Consume(TokenType::RIGHT_PAREN, "Expect ')' after condition.");
+	auto body = Statement();
+	return std::make_unique<WhileStmt>(std::move(condition), std::move(body));
 }
 
 //expressions
