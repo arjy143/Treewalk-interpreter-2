@@ -10,6 +10,7 @@ void Interpreter::Interpret(const std::vector<std::unique_ptr<Stmt>>& statements
 	{
 		for (const auto& statement : statements)
 		{
+			if (!statement) continue; //skipping null statements
 			Execute(*statement);
 		}
 	}
