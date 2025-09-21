@@ -77,19 +77,19 @@ void Scanner::ScanToken()
 	case '*': AddToken(TokenType::STAR); break;
 	case '!':
 		AddToken(Peek() == '=' ? TokenType::BANG_EQUAL : TokenType::BANG);
-		if (Peek() == '=') Advance();
+		//if (Peek() == '=') Advance();
 		break;
 	case '=':
 		AddToken(Peek() == '=' ? TokenType::EQUAL_EQUAL : TokenType::EQUAL);
-		if (Peek() == '=') Advance();
+		///if (Peek() == '=') Advance();
 		break;
 	case '<':
 		AddToken(Peek() == '=' ? TokenType::LESS_EQUAL : TokenType::LESS);
-		if (Peek() == '=') Advance();
+		//if (Peek() == '=') Advance();
 		break;
 	case '>':
 		AddToken(Peek() == '=' ? TokenType::GREATER_EQUAL : TokenType::GREATER);
-		if (Peek() == '=') Advance();
+		//if (Peek() == '=') Advance();
 		break;
 	case '/':
 		if (Peek() == '/')

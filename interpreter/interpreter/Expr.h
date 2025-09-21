@@ -19,6 +19,8 @@ struct Expr::Visitor
 	virtual void VisitGroupingExpr(class GroupingExpr& expr) = 0;
 	virtual void VisitLiteralExpr(class LiteralExpr& expr) = 0;
 	virtual void VisitUnaryExpr(class UnaryExpr& expr) = 0;
+	virtual void VisitVariableExpr(class VariableExpr& expr) = 0;
+	virtual void VisitAssignExpr(class AssignExpr& expr) = 0;
 };
 
 class BinaryExpr : public Expr
@@ -68,4 +70,21 @@ public:
 	void Accept(Visitor& visitor) override {
 		visitor.VisitUnaryExpr(*this);
 	}
+};
+
+class VariableExpr : public Expr
+{
+public:
+	Token name;
+	VariableExpr(Token name) : name(name) {};
+	void Accept(Visitor& visitor) override { visitor.VisitVariableExpr(*this); }
+};
+
+class AssignExpr : public Expr
+{
+public:
+	Token name;
+	std::unique_ptr<Expr> value;
+	AssignExpr(Token name, std::unique_ptr<Expr> value) : name(name), value(std::move(value)) {};
+	void Accept(Visitor& visitor) override { visitor.VisitAssignExpr(*this); };
 };

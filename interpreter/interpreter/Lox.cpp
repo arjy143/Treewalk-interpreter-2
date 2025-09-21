@@ -4,7 +4,6 @@
 #include <fstream>
 #include "Parser.h"
 #include "AstPrinter.h"
-#include "Interpreter.h"
 
 bool Lox::hadError = false;
 bool Lox::hadRuntimeError = false;
@@ -53,13 +52,16 @@ void Lox::Run(const std::string & source)
 	hadRuntimeError = false;
 	Scanner scanner(source);
 	auto tokens = scanner.ScanTokens();
+	//for (const auto& token : tokens) {
+	//	std::cout << "Token: '" << token.lexeme
+	//		<< "' Type: " << static_cast<int>(token.type) << std::endl;
+	//}
 	Parser parser(tokens);
 	auto expression = parser.Parse();
 
 	if (hadError) return;
 
-	Interpreter interpreter;
-	interpreter.Interpret(expression);
+	Lox::interpreter.Interpret(expression);
 
 }
 

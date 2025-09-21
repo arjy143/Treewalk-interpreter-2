@@ -26,6 +26,8 @@ private:
 	std::unique_ptr<Stmt> Statement();
 	std::unique_ptr<Stmt> PrintStatement();
 	std::unique_ptr<Stmt> ExpressionStatement();
+	std::unique_ptr<Stmt> Declaration();
+	std::unique_ptr<Stmt> VarDeclaration();
 
 	std::unique_ptr<Expr> Expression();
 	std::unique_ptr<Expr> Equality();
@@ -34,15 +36,16 @@ private:
 	std::unique_ptr<Expr> Factor();
 	std::unique_ptr<Expr> Unary();
 	std::unique_ptr<Expr> Primary();
+	std::unique_ptr<Expr> Assignment();
 
 	//helper methods
 	bool Match(std::initializer_list<TokenType> types);
 	bool Check(TokenType type) const;
 	const Token Advance();
 	bool IsAtEnd() const;
-	const Token& Peek() const;
-	const Token& Previous() const;
-	const Token& Consume(TokenType type, const std::string& message);
+	const Token Peek() const;
+	const Token Previous() const;
+	const Token Consume(TokenType type, const std::string& message);
 	ParseError error(const Token& token, const std::string& message);
 	void Synchronise();
 

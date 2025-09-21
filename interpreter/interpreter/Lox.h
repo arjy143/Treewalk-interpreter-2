@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "RuntimeError.h"
+#include "Interpreter.h"
 
 class Lox
 {
@@ -18,4 +19,6 @@ private:
 	void Run(const std::string& source);
 	
 	static void Report(int line, std::string where, std::string message);
+
+	Interpreter interpreter;
 };

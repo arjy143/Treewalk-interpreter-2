@@ -15,6 +15,7 @@ struct Stmt::Visitor
 {
 	virtual void VisitExpressionStmt(class ExpressionStmt& stmt) = 0;
 	virtual void VisitPrintStmt(class PrintStmt& stmt) = 0;
+	virtual void VisitVarStmt(class VarStmt& stmt) = 0;
 };
 
 class ExpressionStmt : public Stmt
@@ -37,4 +38,16 @@ class PrintStmt : public Stmt
 		: expression(std::move(expression)) {}
 
 	void Accept(Visitor& visitor) override { visitor.VisitPrintStmt(*this); }
+};
+
+class VarStmt : public Stmt
+{
+public:
+	Token name;
+	std::unique_ptr<Expr> initializer; //can be null
+
+	VarStmt(const Token& name, std::unique_ptr<Expr> initializer)
+		: name(name), initializer(std::move(initializer)) {}
+
+	void Accept(Visitor& visitor) override { visitor.VisitVarStmt(*this); }
 };

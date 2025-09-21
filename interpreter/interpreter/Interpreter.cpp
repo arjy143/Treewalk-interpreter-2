@@ -1,7 +1,8 @@
 #include "Interpreter.h"
 #include <stdexcept>
 #include <iostream>
-#include "RuntimeError.h"
+#include "Environment.h"
+
 
 void Interpreter::Interpret(const std::vector<std::unique_ptr<Stmt>>& statements)
 {
@@ -14,7 +15,8 @@ void Interpreter::Interpret(const std::vector<std::unique_ptr<Stmt>>& statements
 	}
 	catch (const RuntimeError& error)
 	{
-		Lox::TrackRuntimeError(error);
+		std::cerr << "[line " << error.getToken().line << "] RuntimeError: "
+			<< error.what() << "\n";
 	}
 }
 
@@ -158,6 +160,18 @@ void Interpreter::VisitUnaryExpr(UnaryExpr& expr)
 	}
 }
 
+void Interpreter::VisitVariableExpr(VariableExpr& expr)
+{
+	lastValue = environment->Get(expr.name);
+}
+
+void Interpreter::VisitAssignExpr(AssignExpr& expr)
+{
+	auto value = Evaluate(*expr.value);
+	environment->Assign(expr.name, value);
+	lastValue = value;
+}
+
 //stmt visitor methods
 void Interpreter::VisitExpressionStmt(ExpressionStmt& stmt)
 {
@@ -170,6 +184,13 @@ void Interpreter::VisitPrintStmt(PrintStmt& stmt)
 	std::cout << Stringify(value) << "\n";
 }
 
+void Interpreter::VisitVarStmt(VarStmt& stmt) {
+	std::variant<std::monostate, double, std::string, bool> value = std::monostate{};
+	if (stmt.initializer) {
+		value = Evaluate(*stmt.initializer);
+	}
+	environment->Define(stmt.name.lexeme, value);
+}
 //some helper methods
 std::variant<std::monostate, double, std::string, bool> Interpreter::Evaluate(Expr& expr)
 {

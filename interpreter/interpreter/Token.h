@@ -10,13 +10,13 @@ struct Token
 	std::variant<std::monostate, double, std::string, bool> lit;
 	int line;
 
-	Token(TokenType type, const std::string& lexeme, std::variant<std::monostate, double, std::string, bool> literal, int line)
+	Token(TokenType type, const std::string lexeme, std::variant<std::monostate, double, std::string, bool> literal, int line)
 		: type(type), lexeme(lexeme), lit(lit), line(line) {}
-	Token(TokenType type, const std::string& lexeme, double num, int line)
+	Token(TokenType type, const std::string lexeme, double num, int line)
 		: type(type), lexeme(lexeme), lit(num), line(line) {}
-	Token(TokenType type, const std::string& lexeme, std::string str, int line)
+	Token(TokenType type, const std::string lexeme, std::string str, int line)
 		: type(type), lexeme(lexeme), lit(str), line(line) {}
-	Token(TokenType type, const std::string& lexeme, bool bol, int line)
+	Token(TokenType type, const std::string lexeme, bool bol, int line)
 		: type(type), lexeme(lexeme), lit(bol), line(line) {}
 	std::string ToString() const
 	{

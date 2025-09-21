@@ -3,7 +3,8 @@
 #include "Stmt.h"
 #include <vector>
 #include <memory>
-#include "Token.h"
+#include "Environment.h"
+
 class Interpreter : public Expr::Visitor, public Stmt::Visitor
 {
 public:
@@ -17,10 +18,14 @@ public:
 	void VisitGroupingExpr(GroupingExpr& expr) override;
 	void VisitLiteralExpr(LiteralExpr& expr) override;
 	void VisitUnaryExpr(UnaryExpr& expr) override;
-
+	void VisitVariableExpr(VariableExpr& expr) override;
+	void VisitAssignExpr(AssignExpr& expr) override;
+	
 	//stmt visitor methods
 	void VisitExpressionStmt(ExpressionStmt& stmt) override;
 	void VisitPrintStmt(PrintStmt& stmt) override;
+	void VisitVarStmt(VarStmt& stmt) override;
+
 
 private:
 	std::variant<std::monostate, double, std::string, bool> Evaluate(Expr& expr);
@@ -30,4 +35,6 @@ private:
 	std::string Stringify(const std::variant<std::monostate, double, std::string, bool>& value) const;
 
 	std::variant<std::monostate, double, std::string, bool> lastValue;
+	std::shared_ptr<Environment> environment = std::make_shared<Environment>();
+
 };
