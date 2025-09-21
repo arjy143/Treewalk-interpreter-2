@@ -158,6 +158,9 @@ void Interpreter::VisitUnaryExpr(UnaryExpr& expr)
 	case TokenType::BANG:
 		lastValue = !IsTruthy(right);
 		break;
+	default:
+		lastValue = nullptr;
+		break;
 	}
 }
 
@@ -171,6 +174,30 @@ void Interpreter::VisitAssignExpr(AssignExpr& expr)
 	auto value = Evaluate(*expr.value);
 	environment->Assign(expr.name, value);
 	lastValue = value;
+}
+
+void Interpreter::VisitLogicalExpr(LogicalExpr& expr)
+{
+	auto left = Evaluate(*expr.left);
+
+	if (expr.op.type == TokenType::OR)
+	{
+		if (IsTruthy(left))
+		{
+			lastValue = left;
+			return;
+		}
+	}
+	else if (expr.op.type == TokenType::AND)
+	{
+		if (!IsTruthy(left))
+		{
+			lastValue = left;
+			return;
+		}
+	}
+
+	lastValue = Evaluate(*expr.right);
 }
 
 //stmt visitor methods

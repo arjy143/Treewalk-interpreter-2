@@ -199,7 +199,7 @@ std::unique_ptr<Expr> Parser::Primary()
 //check for equals vs assignment, and if assignment then move into left
 std::unique_ptr<Expr> Parser::Assignment()
 {
-	auto expr = Equality();
+	auto expr = Logical();
 
 	if (Match({ TokenType::EQUAL })) {
 		Token equals = Previous();
@@ -215,6 +215,20 @@ std::unique_ptr<Expr> Parser::Assignment()
 
 	return expr;
 }
+
+std::unique_ptr<Expr> Parser::Logical()
+{
+	auto expr = Equality();
+
+	while (Match({ TokenType::AND, TokenType::OR })) {
+		Token op = Previous();
+		auto right = Equality();
+		expr = std::make_unique<LogicalExpr>(std::move(expr), op, std::move(right));
+	}
+
+	return expr;
+}
+
 //helper methods
 
 bool Parser::Match(std::initializer_list<TokenType> types)

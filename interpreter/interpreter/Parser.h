@@ -40,6 +40,8 @@ private:
 	std::unique_ptr<Expr> Unary();
 	std::unique_ptr<Expr> Primary();
 	std::unique_ptr<Expr> Assignment();
+	std::unique_ptr<Expr> Logical();
+
 
 	//helper methods
 	bool Match(std::initializer_list<TokenType> types);

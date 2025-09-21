@@ -20,7 +20,8 @@ public:
 	void VisitUnaryExpr(UnaryExpr& expr) override;
 	void VisitVariableExpr(VariableExpr& expr) override;
 	void VisitAssignExpr(AssignExpr& expr) override;
-	
+	void VisitLogicalExpr(LogicalExpr& expr) override;
+
 	//stmt visitor methods
 	void VisitExpressionStmt(ExpressionStmt& stmt) override;
 	void VisitPrintStmt(PrintStmt& stmt) override;
