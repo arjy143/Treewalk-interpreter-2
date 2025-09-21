@@ -25,6 +25,7 @@ public:
 	void VisitExpressionStmt(ExpressionStmt& stmt) override;
 	void VisitPrintStmt(PrintStmt& stmt) override;
 	void VisitVarStmt(VarStmt& stmt) override;
+	void VisitBlockStmt(BlockStmt& stmt) override;
 
 
 private:

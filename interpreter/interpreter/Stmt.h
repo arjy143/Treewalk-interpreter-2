@@ -1,6 +1,6 @@
 #pragma once
 #include "Expr.h"
-
+#include <vector>
 //defines the statements of the AST
 
 class Stmt
@@ -16,6 +16,7 @@ struct Stmt::Visitor
 	virtual void VisitExpressionStmt(class ExpressionStmt& stmt) = 0;
 	virtual void VisitPrintStmt(class PrintStmt& stmt) = 0;
 	virtual void VisitVarStmt(class VarStmt& stmt) = 0;
+	virtual void VisitBlockStmt(class BlockStmt& stmt) = 0;
 };
 
 class ExpressionStmt : public Stmt
@@ -50,4 +51,15 @@ public:
 		: name(name), initializer(std::move(initializer)) {}
 
 	void Accept(Visitor& visitor) override { visitor.VisitVarStmt(*this); }
+};
+
+class BlockStmt : public Stmt
+{
+public:
+	std::vector<std::unique_ptr<Stmt>> statements;
+
+	BlockStmt(std::vector<std::unique_ptr<Stmt>> statements)
+		: statements(std::move(statements)) {}
+
+	void Accept(Visitor& visitor) override { visitor.VisitBlockStmt(*this); }
 };

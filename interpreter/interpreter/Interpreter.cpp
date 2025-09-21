@@ -192,6 +192,28 @@ void Interpreter::VisitVarStmt(VarStmt& stmt) {
 	}
 	environment->Define(stmt.name.lexeme, value);
 }
+
+void Interpreter::VisitBlockStmt(BlockStmt& stmt)
+{
+	//create a new environment for the block
+	auto previous = environment;
+	environment = std::make_shared<Environment>();
+	try
+	{
+		for (const auto& statement : stmt.statements)
+		{
+			if (!statement) continue; //skip null statements
+			Execute(*statement);
+		}
+	}
+	catch (...)//handle exceptions of any type, but could change this
+	{
+		environment = previous;
+		throw;
+	}
+	environment = previous;
+}
+
 //some helper methods
 std::variant<std::monostate, double, std::string, bool> Interpreter::Evaluate(Expr& expr)
 {

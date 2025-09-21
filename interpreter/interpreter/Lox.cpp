@@ -35,13 +35,28 @@ void Lox::RunFile(const std::string& path)
 }
 void Lox::RunPrompt()
 {
-	std::string line;
-	for (;;)
-	{
-		std::cout << "> ";
-		if (!std::getline(std::cin, line) || line == "exit")
-			break;
-		Lox::Run(line);
+	//suport multi line input if { is not closed
+	std::string buffer;
+	int openBraces = 0;
+
+	while (true) {
+		
+		std::string lineStart = ">";
+		for (int i = 1; i < openBraces+1; ++i)
+		{
+			lineStart = "-" + lineStart;
+		}
+		std::cout << lineStart;
+		std::string line;
+		if (!std::getline(std::cin, line)) break;
+		buffer += line + "\n";
+		openBraces += std::count(line.begin(), line.end(), '{');
+		openBraces -= std::count(line.begin(), line.end(), '}');
+		if (openBraces > 0) continue;
+
+		Run(buffer); 
+		buffer.clear();
+		openBraces = 0;
 		Lox::hadError = false;
 		Lox::hadRuntimeError = false;
 	}
@@ -52,10 +67,7 @@ void Lox::Run(const std::string & source)
 	hadRuntimeError = false;
 	Scanner scanner(source);
 	auto tokens = scanner.ScanTokens();
-	//for (const auto& token : tokens) {
-	//	std::cout << "Token: '" << token.lexeme
-	//		<< "' Type: " << static_cast<int>(token.type) << std::endl;
-	//}
+
 	Parser parser(tokens);
 	auto expression = parser.Parse();
 

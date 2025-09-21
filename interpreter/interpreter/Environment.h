@@ -10,7 +10,9 @@ class Environment
 {
 	public:
 	Environment() = default;
-    //explicit Environment(std::shared_ptr<Environment> enclosing) : enclosing(enclosing) {}
+	//Environment(std::shared_ptr<Environment> parent = nullptr) : enclosing(parent) {}
+    explicit Environment(std::shared_ptr<Environment> enclosing) : enclosing(enclosing) {}
+	
 
 	void Define(const std::string& name, const std::variant<std::monostate, double, std::string, bool>& value)
 	{
@@ -26,11 +28,11 @@ class Environment
 			values[name.lexeme] = value;
 			return;
 		}
-		/*if (enclosing != nullptr)
+		if (enclosing != nullptr)
 		{
 			enclosing->Assign(name, value);
 			return;
-		}*/
+		}
 
 		throw RuntimeError(name, "undefined variable '" + name.lexeme + "'.");
 	}
@@ -42,10 +44,10 @@ class Environment
 		{
 			return iter->second;
 		}
-		/*if (enclosing != nullptr)
+		if (enclosing != nullptr)
 		{
 			return enclosing->Get(name);
-		}*/
+		}
 
 		throw RuntimeError(name, "undefined variable '" + name.lexeme + "'.");
 	}
@@ -53,5 +55,5 @@ class Environment
 private:
 	//keep a map of all variables and their values
 	std::unordered_map<std::string, std::variant<std::monostate, double, std::string, bool>> values;
-	//std::shared_ptr<Environment> enclosing;
+	std::shared_ptr<Environment> enclosing;
 };

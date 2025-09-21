@@ -32,7 +32,7 @@ std::unique_ptr<Stmt> Parser::Statement()
 	{
 		//if (Match({ TokenType::VAR })) return VarDeclaration();
 		if (Match({ TokenType::PRINT })) return PrintStatement();
-		
+		if (Match({ TokenType::LEFT_BRACE })) return BlockStatement();
 		return ExpressionStatement();
 	}
 	catch (const ParseError&)
@@ -67,6 +67,18 @@ std::unique_ptr<Stmt> Parser::VarDeclaration()
 
 	Consume(TokenType::SEMICOLON, "Expect ';' after variable declaration.");
 	return std::make_unique<VarStmt>(name, std::move(initializer));
+}
+
+std::unique_ptr<Stmt> Parser::BlockStatement()
+{
+	std::vector<std::unique_ptr<Stmt>> statements;
+
+	while (!Check(TokenType::RIGHT_BRACE) && !IsAtEnd()) {
+		statements.push_back(Declaration());
+	}
+
+	Consume(TokenType::RIGHT_BRACE, "Expect '}' after block.");
+	return std::make_unique<BlockStmt>(std::move(statements));
 }
 
 //expressions
