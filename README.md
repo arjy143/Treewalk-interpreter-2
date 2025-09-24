@@ -7,27 +7,31 @@ The interpreter is available to download in releases.
 Some example bits of code you can try out are:
 
 # Variables
+```
 var a = 3;
 var b = 7;
 
 print "a + b = " + (a + b);
 print "a * b = " + (a * b);
-
+```
 # Conditionals
+```
 if (a < b) {
     print "a is less than b";
 } else {
     print "a is not less than b";
 }
-
+```
 # While loop
+```
 var count = 0;
 while (count < 5) {
     print "Loop iteration: " + count;
     count = count + 1;
 }
-
+```
 # Block scope
+```
 var outside = "I exist outside";
 {
     var inside = "I exist inside";
@@ -35,4 +39,5 @@ var outside = "I exist outside";
     print outside;  # accessible inside the block
 }
 print outside;      # still accessible
-# print inside;    # would error: undefined variable
+print inside;    # would error: undefined variable
+```
