@@ -14,13 +14,13 @@ class Environment
     explicit Environment(std::shared_ptr<Environment> enclosing) : enclosing(enclosing) {}
 	
 
-	void Define(const std::string& name, const std::variant<std::monostate, double, std::string, bool>& value)
+	void Define(const std::string& name, const LoxValue& value)
 	{
 				values[name] = value;
 	
 	}
 
-	void Assign(const Token& name, const std::variant<std::monostate, double, std::string, bool>& value)
+	void Assign(const Token& name, const LoxValue& value)
 	{
 		auto iter = values.find(name.lexeme);
 		if (iter != values.end())
@@ -37,7 +37,7 @@ class Environment
 		throw RuntimeError(name, "undefined variable '" + name.lexeme + "'.");
 	}
 
-	std::variant<std::monostate, double, std::string, bool> Get(const Token& name)
+	LoxValue Get(const Token& name)
 	{
 		auto iter = values.find(name.lexeme);
 		if (iter != values.end())
@@ -54,6 +54,6 @@ class Environment
 
 private:
 	//keep a map of all variables and their values
-	std::unordered_map<std::string, std::variant<std::monostate, double, std::string, bool>> values;
+	std::unordered_map<std::string, LoxValue> values;
 	std::shared_ptr<Environment> enclosing;
 };

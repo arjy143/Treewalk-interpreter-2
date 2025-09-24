@@ -213,7 +213,7 @@ void Interpreter::VisitPrintStmt(PrintStmt& stmt)
 }
 
 void Interpreter::VisitVarStmt(VarStmt& stmt) {
-	std::variant<std::monostate, double, std::string, bool> value = std::monostate{};
+	LoxValue value = std::monostate{};
 	if (stmt.initializer) {
 		value = Evaluate(*stmt.initializer);
 	}
@@ -264,7 +264,7 @@ void Interpreter::VisitWhileStmt(WhileStmt& stmt)
 }
 
 //some helper methods
-std::variant<std::monostate, double, std::string, bool> Interpreter::Evaluate(Expr& expr)
+LoxValue Interpreter::Evaluate(Expr& expr)
 {
 	expr.Accept(*this);
 	return lastValue;
@@ -275,14 +275,14 @@ void Interpreter::Execute(Stmt& stmt)
 	stmt.Accept(*this);
 }
 
-bool Interpreter::IsTruthy(const std::variant<std::monostate, double, std::string, bool>& value) const
+bool Interpreter::IsTruthy(const LoxValue& value) const
 {
 	if (std::holds_alternative<std::monostate>(value)) return false;
 	if (std::holds_alternative<bool>(value)) return std::get<bool>(value);
 	return true;
 }
 
-bool Interpreter::IsEqual(const std::variant<std::monostate, double, std::string, bool>& a, const std::variant<std::monostate, double, std::string, bool>& b) const
+bool Interpreter::IsEqual(const LoxValue& a, const LoxValue& b) const
 {
 	//handle equals for all variant possibilities
 	if (a.index() != b.index()) return false;
@@ -295,7 +295,7 @@ bool Interpreter::IsEqual(const std::variant<std::monostate, double, std::string
 	return false;
 }
 
-std::string Interpreter::Stringify(const std::variant<std::monostate, double, std::string, bool>& value) const
+std::string Interpreter::Stringify(const LoxValue& value) const
 {
 	if (std::holds_alternative<std::monostate>(value)) return "nil";
 	if (std::holds_alternative<double>(value))

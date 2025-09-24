@@ -32,13 +32,13 @@ public:
 
 
 private:
-	std::variant<std::monostate, double, std::string, bool> Evaluate(Expr& expr);
+	LoxValue Evaluate(Expr& expr);
 	void Execute(Stmt& stmt);
-	bool IsTruthy(const std::variant<std::monostate, double, std::string, bool>& value) const;
-	bool IsEqual(const std::variant<std::monostate, double, std::string, bool>& a, const std::variant<std::monostate, double, std::string, bool>& b) const;
-	std::string Stringify(const std::variant<std::monostate, double, std::string, bool>& value) const;
+	bool IsTruthy(const LoxValue& value) const;
+	bool IsEqual(const LoxValue& a, const LoxValue& b) const;
+	std::string Stringify(const LoxValue& value) const;
 
-	std::variant<std::monostate, double, std::string, bool> lastValue;
+	LoxValue lastValue;
 	std::shared_ptr<Environment> environment = std::make_shared<Environment>();
 
 };

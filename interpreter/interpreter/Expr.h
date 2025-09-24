@@ -50,9 +50,9 @@ public:
 
 class LiteralExpr : public Expr {
 public:
-	std::variant<std::monostate, double, std::string, bool> value;
+	LoxValue value;
 
-	explicit LiteralExpr(std::variant<std::monostate, double, std::string, bool> value)
+	explicit LiteralExpr(LoxValue value)
 		: value(std::move(value)) {}
 
 	void Accept(Visitor& visitor) override {

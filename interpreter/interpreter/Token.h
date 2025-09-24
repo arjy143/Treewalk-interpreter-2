@@ -3,14 +3,16 @@
 #include <string>
 #include <variant>
 
+using LoxValue = std::variant<std::monostate, double, std::string, bool>;
+
 struct Token
 {
 	TokenType type;
 	std::string lexeme;
-	std::variant<std::monostate, double, std::string, bool> lit;
+	LoxValue lit;
 	int line;
 
-	Token(TokenType type, const std::string lexeme, std::variant<std::monostate, double, std::string, bool> literal, int line)
+	Token(TokenType type, const std::string lexeme, LoxValue literal, int line)
 		: type(type), lexeme(lexeme), lit(lit), line(line) {}
 	Token(TokenType type, const std::string lexeme, double num, int line)
 		: type(type), lexeme(lexeme), lit(num), line(line) {}
